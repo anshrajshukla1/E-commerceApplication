@@ -15,13 +15,12 @@ import sb.ecom.ecommerce.payload.CategoryResponse;
 import sb.ecom.ecommerce.repositories.CategoryRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class CategoryServiceImplementation implements CategoryService{
 
 //    private List<Category> categories = new ArrayList<>();
-
 
 
 
@@ -91,8 +90,6 @@ public class CategoryServiceImplementation implements CategoryService{
         savedCategory = categoryRepository.save(category);
             return modelMapper.map(savedCategory, CategoryDTO.class);
         }
-
-
     }
 
 
