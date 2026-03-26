@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* ✅ ADD THIS */
+:root {
+  --color-banner-color1: #fdc200;
+  --color-banner-color2: #ff2c2c;
+  --color-banner-color3: #21ad61;
+}
