@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+# Node (IMPORTANT FIX)
+node_modules/
+package-lock.json
+package.json
+dist/
+frontend/node_modules/
