@@ -1,6 +1,5 @@
 package sb.ecom.ecommerce.controller;
 
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,18 +22,17 @@ public class AddressController {
     @Autowired
     AuthUtil authUtil;
 
-
     @PostMapping("addresses")
     public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDTO){
-
         User user = authUtil.loggedInUser();
-         AddressDTO savedAddressDTO = addressService.createAddress(addressDTO,user);
-         return new ResponseEntity<>(savedAddressDTO, HttpStatus.CREATED);
+        AddressDTO savedAddressDTO = addressService.createAddress(addressDTO,user);
+        return new ResponseEntity<>(savedAddressDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/addresses")
     public ResponseEntity<List<AddressDTO>> getAddresses(){
-        List<AddressDTO> addressList = addressService.getAddresses();
+        User user = authUtil.loggedInUser();
+        List<AddressDTO> addressList = addressService.getUserAddresses(user);
         return new ResponseEntity<>(addressList,HttpStatus.OK);
     }
 
@@ -48,7 +46,7 @@ public class AddressController {
     public ResponseEntity<List<AddressDTO>> getAddressesByName(){
         User user = authUtil.loggedInUser();
         List<AddressDTO> addressDTOList = addressService.getUserAddresses(user);
-        return new ResponseEntity<List<AddressDTO>>(addressDTOList,HttpStatus.OK);
+        return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
     }
 
     @PutMapping("/addresses/{addressId}")
@@ -62,9 +60,5 @@ public class AddressController {
     public ResponseEntity<String> deleteAddresses(@PathVariable Long addressId){
         String status = addressService.deleteById(addressId);
         return new ResponseEntity<>(status,HttpStatus.OK);
-
-
     }
-
-
 }

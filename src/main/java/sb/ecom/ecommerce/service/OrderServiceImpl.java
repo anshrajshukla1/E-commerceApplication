@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,19 +86,19 @@ public class OrderServiceImpl implements OrderService {
 
         orderItems = orderItemRepository.saveAll(orderItems);
 
-        cart.getCartItems().forEach(item -> {
+        List<CartItem> items = new ArrayList<>(cart.getCartItems());
+
+        for (CartItem item : items) {
             int quantity = item.getQuantity();
             Product product = item.getProduct();
 
-            // Reduce stock quantity
+            // Reduce stock
             product.setQuantity(product.getQuantity() - quantity);
-
-            // Save product back to the database
             productRepository.save(product);
 
-            // Remove items from cart
+            // Remove safely
             cartService.deleteProductFromCart(cart.getCartID(), item.getProduct().getProductId());
-        });
+        }
 
         OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);
         orderItems.forEach(item -> orderDTO.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));

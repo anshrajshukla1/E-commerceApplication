@@ -1,12 +1,12 @@
 package sb.ecom.ecommerce.util;
 
-import sb.ecom.ecommerce.model.User;
-import sb.ecom.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import sb.ecom.ecommerce.model.User;
+import sb.ecom.ecommerce.repositories.UserRepository;
 
 @Component
 public class AuthUtil {
@@ -14,30 +14,25 @@ public class AuthUtil {
     @Autowired
     UserRepository userRepository;
 
-    public String loggedInEmail(){
+    private User resolveLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUserName(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
+        String subject = authentication.getName();
+        System.out.println("LOGGED_IN_IDENTIFIER = " + subject);
 
-        return user.getEmail();
+        return userRepository.findByEmail(subject)
+                .or(() -> userRepository.findByUserName(subject))
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with identifier: " + subject));
+    }
+
+    public String loggedInEmail(){
+        return resolveLoggedInUser().getEmail();
     }
 
     public Long loggedInUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUserName(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
-
-        return user.getUserId();
+        return resolveLoggedInUser().getUserId();
     }
 
     public User loggedInUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User user = userRepository.findByUserName(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
-        return user;
-
+        return resolveLoggedInUser();
     }
-
-
 }

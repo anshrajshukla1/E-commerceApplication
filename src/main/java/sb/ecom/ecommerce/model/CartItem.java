@@ -7,7 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "cart_items")
+@Table(
+        name = "cart_items",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"cart_id", "product_id"})
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem {
@@ -15,7 +20,6 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
-
 
     @ManyToOne
     @JoinColumn(name = "cart_id")

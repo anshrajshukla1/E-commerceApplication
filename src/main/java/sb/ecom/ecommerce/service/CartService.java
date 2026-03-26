@@ -2,6 +2,7 @@ package sb.ecom.ecommerce.service;
 
 import jakarta.transaction.Transactional;
 import sb.ecom.ecommerce.payload.CartDTO;
+import sb.ecom.ecommerce.payload.CartItemDTO;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface CartService {
     String deleteProductFromCart(Long cartId, Long productID);
 
     void updateProductInCarts(Long cartID, Long productId);
+
+    String createOrUpdateCartWithItems(List<CartItemDTO> cartItems);
 }
