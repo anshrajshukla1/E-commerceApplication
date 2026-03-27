@@ -5,6 +5,7 @@ public class AppConstants {
     public static final String PAGE_SIZE = "50";
     public static final String sortCategoriesBy = "category.categoryId";
     public static final String SORT_PRODUCT_BY = "productId";
+    public static final String SORT_ORDER_BY = "totalAmount";
     public static final String SORT_DIR = "asc";
 }
 

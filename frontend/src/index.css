@@ -6,3 +6,11 @@
   --color-banner-color2: #ff2c2c;
   --color-banner-color3: #21ad61;
 }
+
+.bg-custom-gradient {
+  background: linear-gradient(to bottom, #0f172a, #1e293b);
+}
+
+.bg-custom-blue {
+  background-color: #2563eb;
+}

@@ -15,6 +15,11 @@ import Checkout from "./components/checkout/Checkout";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserAddresses, getUserCart } from "./store/actions";
 import PaymentConfirmation from "./components/checkout/PaymentConfirmation";
+import AdminLayout from "./components/admin/AdminLayout";
+import Dashboard from "./components/admin/dashboard/Dashboard";
+import Sellers from "./components/admin/sellers/Sellers";
+import Category from "./components/admin/categories/Category";
+import AdminProducts from "./components/admin/products/AdminProducts";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +53,18 @@ function App() {
             <Route path="/login" element={<LogIn />} />
             <Route path="/register" element={<Register />} />
           </Route>
+
+          <Route element={<PrivateRoute adminOnly/>}>
+            <Route path="/admin" element={<AdminLayout />} >
+                <Route path='' element={<Dashboard/>}/>
+                 <Route path='products' element={<AdminProducts/>}/>
+                  <Route path='sellers' element={<Sellers/>}/>
+                   <Route path='categories' element={<Category/>}/>
+            </Route>
+          </Route>
+             
+           
+
 
           <Route element={<PrivateRoute />}>
             <Route path="/cart" element={<Cart />} />

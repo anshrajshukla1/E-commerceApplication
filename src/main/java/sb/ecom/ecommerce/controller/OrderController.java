@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sb.ecom.ecommerce.config.AppConstants;
 import sb.ecom.ecommerce.payload.OrderDTO;
 import sb.ecom.ecommerce.payload.OrderRequestDTO;
+import sb.ecom.ecommerce.payload.OrderResponse;
 import sb.ecom.ecommerce.payload.StripePaymentDto;
 import sb.ecom.ecommerce.service.OrderService;
 import sb.ecom.ecommerce.service.StripeService;
@@ -27,19 +29,19 @@ public class OrderController {
 
 
     @PostMapping("order/users/payments/{paymentMethod}")
-    public ResponseEntity<OrderDTO> orderProducts(@PathVariable String paymentMethod, @RequestBody OrderRequestDTO orderRequestDTO){
-     String emailId= authUtil.loggedInEmail();
-   OrderDTO order = orderService.placeOrder(
-            emailId,
-            orderRequestDTO.getAddressId(),
-            paymentMethod,
-            orderRequestDTO.getPgName(),
-            orderRequestDTO.getPgPaymentId(),
-            orderRequestDTO.getPgStatus(),
-            orderRequestDTO.getPgResponseMessage()
+    public ResponseEntity<OrderDTO> orderProducts(@PathVariable String paymentMethod, @RequestBody OrderRequestDTO orderRequestDTO) {
+        String emailId = authUtil.loggedInEmail();
+        OrderDTO order = orderService.placeOrder(
+                emailId,
+                orderRequestDTO.getAddressId(),
+                paymentMethod,
+                orderRequestDTO.getPgName(),
+                orderRequestDTO.getPgPaymentId(),
+                orderRequestDTO.getPgStatus(),
+                orderRequestDTO.getPgResponseMessage()
 
-    );
-     return new ResponseEntity<>(order, HttpStatus.CREATED);
+        );
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
 
     }
 
@@ -54,4 +56,17 @@ public class OrderController {
             return new ResponseEntity<>("Payment failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/admin/orders")
+    public ResponseEntity<OrderResponse> getAllOrders(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_ORDER_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder
+    ) {
+        OrderResponse orderResponse = orderService.getAllOrders(pageNumber, pageSize, sortBy, sortOrder);
+        return new ResponseEntity<OrderResponse>(orderResponse, HttpStatus.OK);
+    }
 }
+
+
