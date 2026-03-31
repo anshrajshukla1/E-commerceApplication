@@ -1,76 +1,86 @@
-import React from 'react';
-import { formatPriceCalculation } from '../../utils/formatPrice';
+import React from "react";
+import { LuCreditCard, LuMapPinned, LuPackageCheck } from "react-icons/lu";
+import { formatPriceCalculation } from "../../utils/formatPrice";
 
 const OrderSummary = ({ totalPrice, cart, address, paymentMethod }) => {
   const orderItems = Array.isArray(cart) ? cart : [];
   const orderTotal = Number(totalPrice) || 0;
 
   if (orderItems.length === 0) {
-    return <p className="text-center mt-10">No items in cart</p>;
+    return <p className="mt-10 text-center">No items in cart</p>;
   }
 
   return (
-    <div className="container mx-auto px-4 mb-8">
-      <div className="flex flex-wrap">
-
-        <div className="w-full lg:w-8/12 pr-4">
-          <div className="space-y-4">
-
-            <div className="p-4 border rounded-lg shadow-xs">
-              <h2 className='text-2xl font-semibold mb-2'>Billing Address</h2>
-
-              {address ? (
-                <>
-                  <p><strong>Building Name:</strong> {address.buildingName}</p>
-                  <p><strong>City:</strong> {address.city}</p>
-                  <p><strong>Street:</strong> {address.street}</p>
-                  <p><strong>State:</strong> {address.state}</p>
-                  <p><strong>Pincode:</strong> {address.pincode}</p>
-                  <p><strong>Country:</strong> {address.country}</p>
-                </>
-              ) : (
-                <p className="text-red-500">No address selected</p>
-              )}
+    <div className="page-section mb-8 px-0">
+      <div className="grid gap-6 lg:grid-cols-12">
+        <div className="space-y-5 lg:col-span-8">
+          <div className="surface-card p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <LuMapPinned className="text-xl text-indigo-600" />
+              <h2 className="text-2xl font-semibold">Billing Address</h2>
             </div>
 
-            <div className='p-4 border rounded-lg shadow-xs'>
-              <h2 className='text-2xl font-semibold mb-2'>Payment Method</h2>
-              <p><strong>Method:</strong> {paymentMethod || "Not selected"}</p>
-            </div>
-
-            <div className='pb-4 border rounded-lg shadow-xs mb-6'>
-              <h2 className='text-2xl font-semibold mb-2'>Order Items</h2>
-
-              <div className='space-y-2'>
-                {orderItems.map((item) => (
-                  <div key={item.productId} className='flex items-center gap-3'>
-                    <img
-                      src={`${import.meta.env.VITE_BACK_END_URL}/images/${item.image}`}
-                      alt='Product'
-                      className='w-12 h-12 rounded-sm'
-                      onError={(e) => (e.target.src = "/fallback.png")}
-                    />
-
-                    <div className='text-gray-500'>
-                      <p>{item.productName}</p>
-                      <p>
-                        {item.quantity} x ${item.specialPrice} = $
-                        {formatPriceCalculation(item.quantity, item.specialPrice)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+            {address ? (
+              <div className="grid gap-2 text-slate-600 sm:grid-cols-2">
+                <p><strong>Building Name:</strong> {address.buildingName}</p>
+                <p><strong>City:</strong> {address.city}</p>
+                <p><strong>Street:</strong> {address.street}</p>
+                <p><strong>State:</strong> {address.state}</p>
+                <p><strong>Pincode:</strong> {address.pincode}</p>
+                <p><strong>Country:</strong> {address.country}</p>
               </div>
+            ) : (
+              <p className="text-red-500">No address selected</p>
+            )}
+          </div>
+
+          <div className="surface-card p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <LuCreditCard className="text-xl text-indigo-600" />
+              <h2 className="text-2xl font-semibold">Payment Method</h2>
+            </div>
+            <p className="text-slate-600">
+              <strong>Method:</strong> {paymentMethod || "Not selected"}
+            </p>
+          </div>
+
+          <div className="surface-card p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <LuPackageCheck className="text-xl text-indigo-600" />
+              <h2 className="text-2xl font-semibold">Order Items</h2>
             </div>
 
+            <div className="space-y-3">
+              {orderItems.map((item) => (
+                <div
+                  key={item.productId}
+                  className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-3"
+                >
+                  <img
+                    src={`${import.meta.env.VITE_BACK_END_URL}/images/${item.image}`}
+                    alt="Product"
+                    className="h-16 w-16 rounded-2xl object-cover"
+                    onError={(e) => (e.target.src = "/fallback.png")}
+                  />
+
+                  <div className="text-slate-500">
+                    <p className="font-semibold text-slate-800">{item.productName}</p>
+                    <p>
+                      {item.quantity} x ${item.specialPrice} = $
+                      {formatPriceCalculation(item.quantity, item.specialPrice)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="w-full lg:w-4/12 mt-4 lg:mt-0">
-          <div className="border rounded-lg shadow-xs p-4 space-y-4">
-            <h2 className="text-2xl font-semibold mb-2">Order Summary</h2>
+        <div className="lg:col-span-4">
+          <div className="surface-card sticky top-28 space-y-4 p-6">
+            <h2 className="text-2xl font-semibold">Order Summary</h2>
 
-            <div className="space-y-2">
+            <div className="space-y-3 text-slate-600">
               <div className="flex justify-between">
                 <span>Products</span>
                 <span>${formatPriceCalculation(orderTotal)}</span>
@@ -81,14 +91,13 @@ const OrderSummary = ({ totalPrice, cart, address, paymentMethod }) => {
                 <span>$0.00</span>
               </div>
 
-              <div className="flex justify-between font-semibold">
+              <div className="soft-divider flex justify-between border-t pt-3 font-semibold text-slate-900">
                 <span>SubTotal</span>
                 <span>${formatPriceCalculation(orderTotal)}</span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

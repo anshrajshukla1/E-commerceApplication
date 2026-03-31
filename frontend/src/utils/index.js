@@ -1,4 +1,4 @@
-import { FaBoxOpen, FaHome, FaShoppingCart, FaStore, FaThList } from "react-icons/fa";
+import { LuBoxes, LuHouse, LuLayoutGrid, LuShoppingCart, LuStore } from "react-icons/lu";
 import { bannerImageOne, bannerImageThree, bannerImageTwo } from "./constant";
 
 export const bannerLists =[
@@ -29,24 +29,24 @@ export const adminNavigation = [
   {
     name: "Dashboard", 
     href: "/admin", 
-    icon: FaHome, 
+    icon: LuHouse, 
     current: true 
   }, {
     name: "Orders", 
     href: "/admin/orders", 
-    icon: FaShoppingCart
+    icon: LuShoppingCart
   }, {
     name: "Products", 
     href: "/admin/products", 
-    icon: FaBoxOpen
+    icon: LuBoxes
   }, {
     name: "Categories", 
     href: "/admin/categories", 
-    icon: FaThList
+    icon: LuLayoutGrid
   }, {
     name: "Sellers", 
     href: "/admin/sellers", 
-    icon: FaStore
+    icon: LuStore
   }
 ];
 
@@ -54,12 +54,12 @@ export const sellerNavigation = [
   {
     name: "Orders", 
     href: "/admin/orders", 
-    icon: FaShoppingCart,
+    icon: LuShoppingCart,
     current: true 
   }, {
     name: "Products", 
     href: "/admin/products", 
-    icon: FaBoxOpen
+    icon: LuBoxes
   }
 ];
 

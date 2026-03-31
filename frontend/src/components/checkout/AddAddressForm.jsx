@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import InputField from '../shared/InputField';
-import { useForm } from 'react-hook-form';
-import { FaAddressCard } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import Spinners from '../shared/Spinners';
-import toast from 'react-hot-toast';
-import { addUpdateUserAddress } from '../../store/actions';
+import React, { useEffect } from "react";
+import InputField from "../shared/InputField";
+import { useForm } from "react-hook-form";
+import { LuMapPinned } from "react-icons/lu";
+import { useDispatch, useSelector } from "react-redux";
+import Spinners from "../shared/Spinners";
+import toast from "react-hot-toast";
+import { addUpdateUserAddress } from "../../store/actions";
 
 const AddAddressForm = ({ address, setOpenAddressModal }) => {
   const dispatch = useDispatch();
@@ -22,12 +22,7 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
 
   const onSaveAddressHandler = async (data) => {
     dispatch(
-      addUpdateUserAddress(
-        data,
-        toast,
-        address?.addressId,
-        setOpenAddressModal
-      )
+      addUpdateUserAddress(data, toast, address?.addressId, setOpenAddressModal)
     );
   };
 
@@ -43,17 +38,14 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
   }, [address, setValue]);
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-6">
       <form onSubmit={handleSubmit(onSaveAddressHandler)}>
-
-        {/* Header */}
-        <div className="flex justify-center items-center mb-4 font-semibold text-2xl text-slate-800">
-          <FaAddressCard className="mr-2 text-2xl" />
+        <div className="mb-6 flex items-center justify-center gap-3 text-2xl font-semibold text-slate-800">
+          <LuMapPinned className="text-2xl text-indigo-600" />
           {!address?.addressId ? "Add Address" : "Update Address"}
         </div>
 
-        {/* Fields */}
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <InputField
             label="Building Name"
             required
@@ -98,35 +90,34 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
             errors={errors}
           />
 
-          <InputField
-            label="Street"
-            required
-            id="street"
-            type="text"
-            message="*Street is required"
-            placeholder="Enter Street"
-            register={register}
-            errors={errors}
-          />
+          <div className="md:col-span-2">
+            <InputField
+              label="Street"
+              required
+              id="street"
+              type="text"
+              message="*Street is required"
+              placeholder="Enter Street"
+              register={register}
+              errors={errors}
+            />
+          </div>
 
-          <InputField
-            label="Country"
-            required
-            id="country"
-            type="text"
-            message="*Country is required"
-            placeholder="Enter Country"
-            register={register}
-            errors={errors}
-          />
+          <div className="md:col-span-2">
+            <InputField
+              label="Country"
+              required
+              id="country"
+              type="text"
+              message="*Country is required"
+              placeholder="Enter Country"
+              register={register}
+              errors={errors}
+            />
+          </div>
         </div>
 
-        {/* BUTTON FIXED */}
-        <button
-          disabled={btnLoader}
-          className="w-full text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md mt-6 transition"
-          type="submit"
-        >
+        <button disabled={btnLoader} className="btn-primary mt-6 w-full" type="submit">
           {btnLoader ? (
             <>
               <Spinners /> Loading...
@@ -135,7 +126,6 @@ const AddAddressForm = ({ address, setOpenAddressModal }) => {
             "Save Address"
           )}
         </button>
-
       </form>
     </div>
   );

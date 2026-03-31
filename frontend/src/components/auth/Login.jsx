@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiOutlineLogin } from "react-icons/ai";
+import { LuLogIn, LuShieldCheck } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import InputField from "../shared/InputField";
 import { useDispatch } from "react-redux";
@@ -23,28 +23,29 @@ const LogIn = () => {
   });
 
   const loginHandler = (data) => {
-    dispatch(
-      authenticateSignInUser(data, toast, reset, navigate, setLoader)
-    );
+    dispatch(authenticateSignInUser(data, toast, reset, navigate, setLoader));
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex justify-center items-center">
+    <div className="page-section flex min-h-[calc(100vh-76px)] items-center justify-center py-14">
       <form
         onSubmit={handleSubmit(loginHandler)}
-        className="sm:w-[450px] w-[360px] shadow-lg py-8 sm:px-8 px-4 rounded-md"
+        className="surface-card w-full max-w-[460px] px-5 py-10 sm:px-8"
       >
-        {/* HEADER */}
         <div className="flex flex-col items-center justify-center space-y-4">
-          <AiOutlineLogin className="text-slate-800 text-5xl" />
-          <h1 className="text-slate-800 text-center lg:text-3xl text-2xl font-bold">
+          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-50 text-indigo-600">
+            <LuLogIn className="text-4xl" />
+          </span>
+          <h1 className="text-center text-2xl font-bold tracking-tight text-slate-900 lg:text-3xl">
             Login Here
           </h1>
+          <p className="text-center text-sm text-slate-500">
+            Access your orders, checkout history, and saved cart.
+          </p>
         </div>
 
-        <hr className="mt-2 mb-5 border-slate-300" />
+        <hr className="soft-divider mt-6 mb-6" />
 
-        {/* INPUTS */}
         <div className="flex flex-col gap-3">
           <InputField
             label="UserName"
@@ -69,10 +70,9 @@ const LogIn = () => {
           />
         </div>
 
-        {/* BUTTON */}
         <button
           disabled={loader}
-          className="bg-blue-500 flex gap-2 items-center justify-center font-semibold text-white w-full py-2 hover:bg-blue-600 transition duration-200 rounded-md my-3"
+          className="btn-primary my-4 flex w-full items-center justify-center"
           type="submit"
         >
           {loader ? (
@@ -80,15 +80,17 @@ const LogIn = () => {
               <Spinners /> Loading...
             </>
           ) : (
-            <>Login</>
+            <>
+              <LuShieldCheck />
+              Login
+            </>
           )}
         </button>
 
-        {/* FOOTER */}
-        <p className="text-center text-sm text-slate-700 mt-6">
+        <p className="mt-6 text-center text-sm text-slate-700">
           Don't have an account?
           <Link
-            className="font-semibold underline hover:text-black ml-1"
+            className="ml-1 font-semibold underline hover:text-black"
             to="/register"
           >
             SignUp

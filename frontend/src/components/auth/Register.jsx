@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaUserPlus } from "react-icons/fa";
+import { LuBadgeCheck, LuUserPlus } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import InputField from "../shared/InputField";
 import { useDispatch } from "react-redux";
@@ -22,35 +22,37 @@ const Register = () => {
     mode: "onTouched",
   });
 
-  // 🔥 FIXED PAYLOAD HERE
   const registerHandler = (data) => {
     const payload = {
-      userName: data.username,   // ✅ matches backend
+      userName: data.username,
       email: data.email,
       password: data.password,
-      role: ["user"],            // ✅ matches backend (Set<String>)
+      role: ["user"],
     };
 
     dispatch(registerNewUser(payload, toast, reset, navigate, setLoader));
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex justify-center items-center bg-gray-100">
+    <div className="page-section flex min-h-[calc(100vh-76px)] items-center justify-center py-14">
       <form
         onSubmit={handleSubmit(registerHandler)}
-        className="sm:w-[450px] w-[360px] shadow-lg py-8 sm:px-8 px-4 rounded-xl bg-white"
+        className="surface-card w-full max-w-[460px] bg-white px-5 py-10 sm:px-8"
       >
-        {/* HEADER */}
         <div className="flex flex-col items-center justify-center space-y-4">
-          <FaUserPlus className="text-slate-800 text-5xl" />
-          <h1 className="text-slate-800 text-center font-montserrat lg:text-3xl text-2xl font-bold">
+          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-50 text-indigo-600">
+            <LuUserPlus className="text-4xl" />
+          </span>
+          <h1 className="text-center text-2xl font-bold tracking-tight text-slate-900 lg:text-3xl">
             Register Here
           </h1>
+          <p className="text-center text-sm text-slate-500">
+            Create your account and start shopping with a cleaner checkout flow.
+          </p>
         </div>
 
-        <hr className="mt-2 mb-5 text-gray-300" />
+        <hr className="soft-divider mt-6 mb-6" />
 
-        {/* INPUTS */}
         <div className="flex flex-col gap-3">
           <InputField
             label="UserName"
@@ -87,13 +89,9 @@ const Register = () => {
           />
         </div>
 
-        {/* BUTTON */}
         <button
           disabled={loader}
-          className="w-full py-2 mt-3 rounded-md font-semibold text-white 
-          bg-gradient-to-r from-purple-600 to-red-500 
-          hover:from-purple-500 hover:to-red-400 
-          transition duration-300 flex justify-center items-center gap-2"
+          className="btn-primary mt-4 flex w-full justify-center"
           type="submit"
         >
           {loader ? (
@@ -101,15 +99,17 @@ const Register = () => {
               <Spinners /> Loading...
             </>
           ) : (
-            <>Register</>
+            <>
+              <LuBadgeCheck />
+              Register
+            </>
           )}
         </button>
 
-        {/* FOOTER */}
-        <p className="text-center text-sm text-slate-600 mt-6">
+        <p className="mt-6 text-center text-sm text-slate-600">
           Already have an account?
           <Link
-            className="font-semibold underline hover:text-black ml-1"
+            className="ml-1 font-semibold underline hover:text-black"
             to="/login"
           >
             Login

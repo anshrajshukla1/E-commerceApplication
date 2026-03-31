@@ -1,5 +1,5 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
-import { FaCheck } from "react-icons/fa";
+import { LuCheck, LuChevronsUpDown } from "react-icons/lu";
 
 const SelectTextField = ({
     label,
@@ -18,21 +18,24 @@ const SelectTextField = ({
         
             <div className="relative">
                 <ListboxButton 
-                className={`relative text-sm py-2 rounded-md border border-slate-700  w-full cursor-default  bg-white  text-left text-gray-600 sm:text-sm sm:leading-6`}>
-                    <span className="block truncate ps-2">{select?.categoryName || ""}</span>
+                className="form-input relative cursor-default pr-10 text-left text-sm text-slate-700 sm:leading-6">
+                    <span className="block truncate">{select?.categoryName || ""}</span>
+                    <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                        <LuChevronsUpDown className="text-lg" />
+                    </span>
                 </ListboxButton>
                 <ListboxOptions
                     transition
-                    className="absolute z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-opacity-5 ring-black focus:outline-hidden">
+                    className="absolute z-10 mt-2 max-h-60 w-full overflow-auto rounded-2xl border border-slate-200 bg-white p-2 text-base shadow-xl focus:outline-hidden">
                     {lists?.map((category) => (
                     <ListboxOption key={category.categoryId} value={category} 
-                    className="group relative cursor-default py-2 pl-3 pr-9 text-gray-900 data-focus:bg-indigo-600 data-focus:text-white">
+                    className="group relative cursor-default rounded-xl py-3 pl-3 pr-9 text-slate-900 data-focus:bg-indigo-50 data-focus:text-indigo-700">
                         <span className="block truncate font-semibold group-data-selected:font-semibold">
                             {category.categoryName}
                         </span>
 
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-focus:text-white [.group:not([data-selected])_&]:hidden">
-                            <FaCheck className="text-xl"/>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 [.group:not([data-selected])_&]:hidden">
+                            <LuCheck className="text-xl"/>
                         </span>
                         
                     </ListboxOption>

@@ -1,9 +1,7 @@
 import { Badge } from "@mui/material";
 import { useState } from "react";
-import { FaShoppingCart, FaSignInAlt, FaStore } from "react-icons/fa";
+import { LuLogIn, LuMenu, LuShoppingCart, LuSparkles, LuStore, LuX } from "react-icons/lu";
 import { Link, useLocation } from "react-router-dom";
-import { RxCross2 } from "react-icons/rx";
-import { IoIosMenu } from "react-icons/io";
 import { useSelector } from "react-redux";
 import UserMenu from "../UserMenu";
 
@@ -15,25 +13,29 @@ const Navbar = () => {
   const {user} = useSelector((state)=>state.auth);
 
   return (
-    <div className="h-[70px] bg-gradient-to-r from-gray-900 to-gray-800 text-white z-50 flex items-center sticky top-0">
-      
-      <div className="lg:px-14 sm:px-8 px-4 w-full flex justify-between items-center">
+    <div className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 text-slate-900 shadow-[0_10px_24px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* LOGO */}
-        <Link to="/" className="flex items-center text-2xl font-bold">
-          <FaStore className="mr-2 text-3xl" />
-          <span className="font-[Poppins]">Ansh-verse</span>
+        <Link to="/" className="flex shrink-0 items-center gap-3 text-xl font-extrabold tracking-tight">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-sky-500 text-white shadow-[0_14px_30px_-18px_rgba(99,102,241,0.95)]">
+            <LuStore className="text-2xl" />
+          </span>
+          <span className="flex items-center gap-2">
+            Ansh-verse
+            <span className="hidden rounded-full bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-600 sm:inline-flex">
+              Premium
+            </span>
+          </span>
         </Link>
 
-        {/* NAV LINKS */}
-        <ul className={`flex sm:gap-10 gap-4 sm:items-center  text-slate-800 sm:static absolute left-0 top-[70px] sm:shadow-none shadow-md ${
-            navbarOpen ? "h-fit sm:pb-0 pb-5" : "h-0 overflow-hidden"
-          }  transition-all duration-100 sm:h-fit sm:bg-none sm:bg-none bg-gradient-to-r from-gray-900 to-gray-800   text-white sm:w-fit w-full sm:flex-row flex-col px-4 sm:px-0`}>
+        <ul className={`absolute left-0 top-16 flex w-full flex-col gap-4 border-b border-slate-200 bg-white/95 px-6 py-0 text-slate-700 shadow-xl backdrop-blur-xl transition-all duration-200 sm:static sm:ml-auto sm:w-auto sm:flex-row sm:items-center sm:justify-end sm:gap-2 sm:border-none sm:bg-transparent sm:px-0 sm:py-0 sm:shadow-none sm:backdrop-blur-none lg:gap-3 ${
+            navbarOpen ? "max-h-[420px] py-6" : "max-h-0 overflow-hidden sm:max-h-none"
+          }`}>
           
           <li>
             <Link
-              className={`transition ${
-                path === "/" ? "text-white font-semibold" : "text-gray-300 hover:text-white"
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                path === "/" ? "bg-indigo-50 text-indigo-600" : "hover:bg-slate-100 hover:text-slate-900"
               }`}
               to="/"
             >
@@ -43,8 +45,8 @@ const Navbar = () => {
 
           <li>
             <Link
-              className={`transition ${
-                path === "/products" ? "text-white font-semibold" : "text-gray-300 hover:text-white"
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                path === "/products" ? "bg-indigo-50 text-indigo-600" : "hover:bg-slate-100 hover:text-slate-900"
               }`}
               to="/products"
             >
@@ -54,8 +56,8 @@ const Navbar = () => {
 
           <li>
             <Link
-              className={`transition ${
-                path === "/about" ? "text-white font-semibold" : "text-gray-300 hover:text-white"
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                path === "/about" ? "bg-indigo-50 text-indigo-600" : "hover:bg-slate-100 hover:text-slate-900"
               }`}
               to="/about"
             >
@@ -65,8 +67,8 @@ const Navbar = () => {
 
           <li>
             <Link
-              className={`transition ${
-                path === "/contact" ? "text-white font-semibold" : "text-gray-300 hover:text-white"
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                path === "/contact" ? "bg-indigo-50 text-indigo-600" : "hover:bg-slate-100 hover:text-slate-900"
               }`}
               to="/contact"
             >
@@ -76,7 +78,10 @@ const Navbar = () => {
 
           {/* CART */}
           <li>
-            <Link to="/cart">
+            <Link
+              to="/cart"
+              className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_16px_30px_-24px_rgba(15,23,42,0.4)] transition hover:border-indigo-200 hover:text-indigo-600"
+            >
               <Badge
                 showZero
                 badgeContent={cart?.length | 0}
@@ -84,8 +89,9 @@ const Navbar = () => {
                 overlap="circular"
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <FaShoppingCart size={22} />
+                <LuShoppingCart size={20} />
               </Badge>
+              <span className="hidden sm:inline">Cart</span>
             </Link>
           </li>
 
@@ -96,23 +102,20 @@ const Navbar = () => {
                     </li>
                 ) : (
                 <li className="font-medium transition-all duration-150">
-                   <Link className="flex items-center space-x-2 px-4 py-[6px] 
-                            bg-linear-to-r from-purple-600 to-red-500 
-                            text-white font-semibold rounded-md shadow-lg 
-                            hover:from-purple-500 hover:to-red-400 transition 
-                            duration-300 ease-in-out transform "
+                   <Link className="btn-primary px-5 py-3 text-sm"
                     to="/login">
-                        <FaSignInAlt />
+                        <LuLogIn />
                         <span>Login</span>
+                        <LuSparkles className="text-base" />
                    </Link> 
                 </li>
                 )}
         </ul>
-        <button onClick={()=> setNavbarOpen(!navbarOpen)}className="sm:hidden flex items-center sm:mt-2">
+        <button onClick={()=> setNavbarOpen(!navbarOpen)}className="flex items-center rounded-2xl border border-slate-200 bg-white p-2.5 text-slate-800 shadow-[0_16px_28px_-24px_rgba(15,23,42,0.45)] sm:hidden">
             {navbarOpen?(
-               <RxCross2 className="text-white text-3xl" />
+               <LuX className="text-2xl" />
             ):(
-                         <IoIosMenu className="text-white text-3xl"/> 
+                         <LuMenu className="text-2xl"/> 
             )}
         </button>
       </div>

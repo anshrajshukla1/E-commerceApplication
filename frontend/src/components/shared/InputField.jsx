@@ -13,23 +13,20 @@ const InputField = ({
 }) => {
   return (
     <div className="flex flex-col gap-1 w-full">
-      
-      {/* LABEL */}
       <label
         htmlFor={id}
-        className={`${className ? className : ""} font-semibold text-sm text-slate-800`}
+        className={`${className ? className : ""} mb-1 text-sm font-semibold text-slate-700`}
       >
         {label}
       </label>
 
-      {/* INPUT */}
       <input
         type={type}
         id={id}
         placeholder={placeholder}
         defaultValue={value}
-        className={`${className ? className : ""} px-2 py-2 border outline-none bg-transparent text-slate-800 rounded-md ${
-          errors[id]?.message ? "border-red-500" : "border-slate-700"
+        className={`${className ? className : ""} form-input ${
+          errors[id]?.message ? "border-red-500 focus:border-red-500 focus:shadow-[0_0_0_4px_rgba(220,38,38,0.12)]" : ""
         }`}
         {...register(id, {
           required: required
@@ -60,7 +57,6 @@ const InputField = ({
         })}
       />
 
-      {/* ERROR MESSAGE */}
       {errors[id]?.message && (
         <p className="text-sm font-semibold text-red-600 mt-1">
           {errors[id]?.message}

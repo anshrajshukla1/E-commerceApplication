@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import { bannerLists } from "../../utils";
 import { Link } from "react-router-dom";
+import { LuArrowRight } from "react-icons/lu";
 
 const colors = [
   "bg-[var(--color-banner-color1)]",
@@ -18,7 +19,7 @@ const colors = [
 
 const HeroBanner = () => {
   return (
-    <div className="py-2 rounded-md">
+    <div className="hero-swiper overflow-hidden rounded-[2rem] py-2">
       <Swiper
         grabCursor={true}
         autoplay={{
@@ -36,36 +37,40 @@ const HeroBanner = () => {
           return (
             <SwiperSlide key={item.id}>
               <div
-                className={`rounded-md sm:h-[500px] h-auto ${colorClass} flex flex-col lg:flex-row items-center justify-between px-12 lg:px-20`}
+                className={`relative overflow-hidden rounded-[2rem] sm:h-[520px] h-auto ${colorClass} flex flex-col lg:flex-row items-center justify-between px-8 py-10 lg:px-20`}
               >
-                {/* TEXT */}
-                <div className="w-full lg:w-[45%] text-center lg:text-left">
-                  <h3 className="text-2xl md:text-3xl text-white font-bold">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent_55%)]" />
+                <div className="relative w-full lg:w-[45%] text-center lg:text-left">
+                  <span className="inline-flex rounded-full bg-white/15 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm">
+                    Curated living
+                  </span>
+                  <h3 className="mt-6 text-2xl font-bold text-white/90 md:text-3xl">
                     {item.title}
                   </h3>
 
-                  <h1 className="text-3xl md:text-5xl text-white font-bold mt-2">
+                  <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-white md:text-6xl">
                     {item.subtitle}
                   </h1>
 
-                  <p className="text-white mt-3">
+                  <p className="mt-4 max-w-xl text-base leading-7 text-white/80">
                     {item.description}
                   </p>
 
                   <Link
                     to="/products"
-                    className="mt-6 inline-block bg-black text-white py-2 px-4 hover:bg-gray-800 rounded"
+                    className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-3 font-semibold text-slate-900 shadow-xl transition hover:scale-105 hover:bg-slate-100"
                   >
-                    Shop
+                    Shop now
+                    <LuArrowRight />
                   </Link>
                 </div>
 
-                {/* IMAGE */}
-                <div className="w-full lg:w-[45%] flex justify-center mt-4 lg:mt-0">
+                <div className="relative mt-8 flex w-full justify-center lg:mt-0 lg:w-[45%]">
+                  <div className="absolute inset-0 mx-auto h-[280px] w-[280px] rounded-full bg-white/12 blur-3xl" />
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-[300px] md:w-[400px] lg:w-[500px] object-contain"
+                    className="relative w-[300px] object-contain drop-shadow-[0_28px_55px_rgba(15,23,42,0.32)] transition-transform duration-500 hover:scale-105 md:w-[400px] lg:w-[500px]"
                   />
                 </div>
               </div>

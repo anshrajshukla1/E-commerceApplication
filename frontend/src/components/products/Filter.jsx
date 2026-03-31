@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaArrowUp, FaArrowDown, FaSearch } from "react-icons/fa";
-import { LuRefreshCcw } from "react-icons/lu";
-import { FormControl, InputLabel, Select, MenuItem, Tooltip, Button } from "@mui/material"
+import { LuArrowDown, LuArrowUp, LuRefreshCcw, LuSearch } from "react-icons/lu";
+import { Tooltip, Button } from "@mui/material"
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 const Filter = ({categories})=>{
   
@@ -15,18 +14,18 @@ const Filter = ({categories})=>{
   const [sortOrder,setSortOrder]= useState("asc");
   const [searchTerm ,setSearchTerm]= useState("");
 
-  const handleSortToggle = () => {
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
-  };
-
   useEffect(()=>{
     const currentCategory = searchParams.get("category")|| "all";
-     const currentSortOrder = searchParams.get("sortBy")|| "asc";
+     const currentSortOrder = searchParams.get("sortOrder")|| "asc";
       const currentSearchTerm = searchParams.get("keyword")|| "";
 
-      setCategory(currentCategory)
-      setSortOrder(currentSortOrder)
-      setSearchTerm(currentSearchTerm)
+      const timer = setTimeout(() => {
+        setCategory(currentCategory);
+        setSortOrder(currentSortOrder);
+        setSearchTerm(currentSearchTerm);
+      }, 0);
+
+      return () => clearTimeout(timer);
   },[searchParams]);
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const toggleSortOrder = () => {
     setSortOrder((prevOrder) => {
         const newOrder = prevOrder === "asc" ? "desc" : "asc";
         const newParams = new URLSearchParams(window.location.search);
-        newParams.set("sortBy", newOrder);
+        newParams.set("sortOrder", newOrder);
         const q = newParams.toString();
        setTimeout(() => {
   navigate(q ? `${pathname}?${q}` : pathname);
@@ -84,39 +83,37 @@ const handleClearFilters = () => {
 
 
   return(
-    <div className="flex lg:flex-row flex-col-reverse lg:justify-between justify-center items-center gap-4">
-       <div className="relative flex items-center 2xl:w-112.5 sm:w-105 w-full">
+    <div className="surface-card flex flex-col gap-5 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+       <div className="relative w-full lg:max-w-xl">
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+          <LuSearch size={18} />
+        </span>
         <input type="text"
         placeholder="Search Products" 
         value={searchTerm}
         onChange={(e)=>setSearchTerm(e.target.value)}
-        className="border border-gray-400 text-slate-800 rounded-md py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-[#1976d2]" />
-      <FaSearch className="absolute left-3 text-slate-800" size={20} />
+        className="h-11 w-full rounded-full border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
        </div>
        
-       <div className="flex sm:flex-row flex-col gap-4 items-center">
-          <FormControl 
-          className="text-slate-800 border-slate-700"
-          variant="outlined"
-          size="small">
-            <InputLabel  id="category-select-label">
-            Category
-            </InputLabel>
-            <Select 
-            className="min-w-30 tex-slate-800 border-slate-700"
-            labelId="category-select-label"
-            value={category}
-            onChange={handleCategoryChange}
-            label="Category">
-               <MenuItem value="all">All</MenuItem>
-               {categories.map((item)=> (
-  <MenuItem key={item.categoryId} value={item.categoryName}>
-    {item.categoryName}
-  </MenuItem>
-))}
-            </Select>
-         
-          </FormControl>
+       <div className="flex w-full flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end lg:w-auto lg:flex-nowrap">
+          <div className="flex min-w-[220px] flex-col gap-2">
+            <label htmlFor="category-filter" className="text-sm font-semibold text-slate-700">
+              Category
+            </label>
+            <select
+              id="category-filter"
+              value={category}
+              onChange={handleCategoryChange}
+              className="h-11 cursor-pointer rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-slate-300 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+            >
+              <option value="all">All</option>
+              {categories.map((item)=> (
+                <option key={item.categoryId} value={item.categoryName}>
+                  {item.categoryName}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <Tooltip title={`Sorted by Price: ${sortOrder}`}>
             <Button
@@ -124,15 +121,15 @@ const handleClearFilters = () => {
               variant="contained"
               onClick={toggleSortOrder}
               color="primary"
-              className="flex items-center gap-2 h-10"
+              className="!h-11 !rounded-lg !bg-indigo-500 !px-5 !font-semibold !shadow-[0_18px_35px_-22px_rgba(99,102,241,0.85)] hover:!bg-indigo-600"
             >
               Sort By
-              {sortOrder === "asc" ? <FaArrowUp size={20} /> : <FaArrowDown size={20} />}
+              {sortOrder === "asc" ? <LuArrowUp size={20} /> : <LuArrowDown size={20} />}
             </Button>
                 
                 
 </Tooltip>
- <button className="flex items-center gap-2 bg-rose-900 text-white px-3 py-2 rounded-md transition duration-300 ease-in shadow-md focus:outline-none"
+ <button className="flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100"
  
  onClick={handleClearFilters}>   
    <LuRefreshCcw className="font-semibold"size={16}/>

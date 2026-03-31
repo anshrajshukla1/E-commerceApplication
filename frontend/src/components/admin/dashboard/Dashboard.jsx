@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import DashboardOverview from "./DashboardOverview";
-import { FaBoxOpen, FaDollarSign, FaShoppingCart } from "react-icons/fa";
+import { LuBoxes, LuChartNoAxesCombined, LuShoppingCart } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { analyticsAction } from "../../../store/actions";
 import Loader from "../../shared/Loader";
@@ -31,28 +31,23 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <div
-        className="flex md:flex-row mt-8 flex-col lg:justify-between 
-          border border-slate-400 rounded-lg bg-linear-to-r
-           from-blue-50 to-blue-100 shadow-lg"
-      >
-        <DashboardOverview
-          title="Total Products"
-          amount={productCount}
-          Icon={FaBoxOpen}
-        />
+    <div className="space-y-8">
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Dashboard Overview</h1>
+          <p className="admin-page-copy">
+            A clean snapshot of products, revenue, and order activity across the platform.
+          </p>
+        </div>
+      </div>
 
-        <DashboardOverview
-          title="Total Orders"
-          amount={totalOrders}
-          Icon={FaShoppingCart}
-        />
-
+      <div className="grid gap-6 xl:grid-cols-3">
+        <DashboardOverview title="Total Products" amount={productCount} icon={LuBoxes} />
+        <DashboardOverview title="Total Orders" amount={totalOrders} icon={LuShoppingCart} />
         <DashboardOverview
           title="Total Revenue"
           amount={totalRevenue}
-          Icon={FaDollarSign}
+          icon={LuChartNoAxesCombined}
           revenue
         />
       </div>

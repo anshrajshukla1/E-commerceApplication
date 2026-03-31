@@ -29,54 +29,49 @@ const Products = [
 
 const About = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      
-      <h1 className="text-slate-800 text-4xl font-bold text-center mb-12">
-        About Us
-      </h1>
-
-      <div className="flex flex-col lg:flex-row justify-between items-center mb-12">
-        
-        <div className="w-full md:w-1/2 text-left">
-          <p className="text-lg mb-4">
-            Welcome to Ansh-Verse! We are dedicated to providing best 
-            products and services to our customers. Our mission is to create a seamless shopping experience while ensuring
-            the highest quality of our offerings.
+    <div className="page-section py-12">
+      <div className="surface-card mb-10 grid gap-10 px-6 py-10 lg:grid-cols-2 lg:px-10">
+        <div className="flex flex-col justify-center">
+          <span className="mb-4 inline-flex w-fit rounded-full bg-indigo-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600">
+            About us
+          </span>
+          <h1 className="section-heading mb-6">A cleaner commerce experience.</h1>
+          <p className="section-subtext text-lg">
+            Welcome to Ansh-Verse. We focus on curated products, simple checkout flows, and a shopping experience that feels modern from first visit to final order.
           </p>
         </div>
 
-        <div className="w-full md:w-1/2 mb-6 md:mb-0">
+        <div className="overflow-hidden rounded-[2rem]">
           <img
-            src="https://embarkx.com/sample/placeholder.png"
+            src="https://images.pexels.com/photos/6238363/pexels-photo-6238363.jpeg"
             alt="About Us"
-            className="w-full h-auto rounded-lg transform transition-transform duration-300 hover:scale-105"
+            className="h-full w-full rounded-[2rem] object-cover transition-transform duration-500 hover:scale-105"
           />
         </div>
       </div>
 
-      {/* PRODUCTS SECTION */}
       <div className="py-7 space-y-8">
-        <h1 className="text-slate-800 text-4xl font-bold text-center mb-8">
-          Our Products
-        </h1>
+        <div className="text-center">
+          <h1 className="section-heading">Our Products</h1>
+          <p className="section-subtext mx-auto mt-3 max-w-2xl">
+            A premium mix of devices and lifestyle essentials presented in a cleaner catalog.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-         {Products.map((product, index) => (
-  <ProductCard
-    key={index}
-    image={product.image}
-    productName={product.productName}
-    description={product.description}
-    specialPrice={product.specialPrice}
-    price={product.price}
-    about
-  />
-))}
-
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Products.map((product, index) => (
+            <ProductCard
+              key={index}
+              image={product.image}
+              productName={product.productName}
+              description={product.description}
+              specialPrice={product.specialPrice}
+              price={product.price}
+              about
+            />
+          ))}
         </div>
       </div>
-      
     </div>
   );
 };

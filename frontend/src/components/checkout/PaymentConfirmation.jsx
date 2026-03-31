@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { LuBadgeCheck } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { stripePaymentConfirmation } from "../../store/actions";
@@ -17,11 +17,10 @@ const PaymentConfirmation = () => {
   const paymentIntent = searchParams.get("payment_intent");
   const clientSecret = searchParams.get("payment_intent_client_secret");
   const redirectStatus = searchParams.get("redirect_status");
-  const selectedUserCheckoutAddress = localStorage.getItem("CHECKOUT_ADDRESS")
-    ? JSON.parse(localStorage.getItem("CHECKOUT_ADDRESS"))
-    : [];
-
   useEffect(() => {
+    const selectedUserCheckoutAddress = localStorage.getItem("CHECKOUT_ADDRESS")
+      ? JSON.parse(localStorage.getItem("CHECKOUT_ADDRESS"))
+      : [];
     const token = localStorage.getItem("token")?.trim();
 
     if (
@@ -41,12 +40,7 @@ const PaymentConfirmation = () => {
       };
 
       dispatch(
-        stripePaymentConfirmation(
-          sendData,
-          setErrorMessage,
-          setLoading,
-          toast
-        )
+        stripePaymentConfirmation(sendData, setErrorMessage, setLoading, toast)
       );
     }
   }, [
@@ -55,24 +49,25 @@ const PaymentConfirmation = () => {
     dispatch,
     paymentIntent,
     redirectStatus,
-    selectedUserCheckoutAddress,
   ]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="page-section flex min-h-screen items-center justify-center py-14">
       {loading ? (
-        <div className="max-w-xl mx-auto">
+        <div className="surface-card mx-auto max-w-xl p-8">
           <Skeleton />
         </div>
       ) : (
-        <div className="p-8 rounded-lg shadow-lg text-center max-w-md mx-auto border border-gray-200">
-          <div className="text-green-500 mb-4 flex  justify-center">
-            <FaCheckCircle size={64} />
+        <div className="surface-card mx-auto max-w-md p-8 text-center">
+          <div className="mb-4 flex justify-center text-green-500">
+            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+              <LuBadgeCheck size={52} />
+            </span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="mb-2 text-3xl font-bold text-gray-800">
             Payment Successful!
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             Thank you for your purchase! Your payment was successful, and we are
             processing your order.
           </p>

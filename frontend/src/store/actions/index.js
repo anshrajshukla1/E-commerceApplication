@@ -476,18 +476,25 @@ export const dashboardProductsAction = (queryString, isAdmin) => async (dispatch
 };
 
 const getDashboardProductsQueryString = (queryString) => {
-    if (queryString && queryString !== "undefined") {
-        return queryString;
-    }
+    const fallbackQueryString = new URLSearchParams(window.location.search).toString();
+    const sourceQueryString =
+        queryString && queryString !== "undefined" ? queryString : fallbackQueryString;
 
-    return new URLSearchParams(window.location.search).toString();
+    const searchParams = new URLSearchParams(sourceQueryString);
+    const currentPage = searchParams.get("page")
+        ? Number(searchParams.get("page"))
+        : 1;
+
+    searchParams.delete("page");
+    searchParams.set("pageNumber", currentPage - 1);
+
+    return searchParams.toString();
 };
 
 export const updateProductFromDashboard = 
     (sendData, toast, reset, setLoader, setOpen, isAdmin, queryString) => async (dispatch) => {
     try {
-        const safeQueryString =
-            queryString && queryString !== "undefined" ? queryString : "";
+        const safeQueryString = getDashboardProductsQueryString(queryString);
         setLoader(true);
         const endpoint = isAdmin ? "/admin/products/" : "/seller/products/";
         const { data } = await api.put(`${endpoint}${sendData.id}`, sendData);
@@ -513,8 +520,7 @@ export const updateProductFromDashboard =
 export const addNewProductFromDashboard = 
     (sendData, toast, reset, setLoader, setOpen, isAdmin, queryString) => async(dispatch, getState) => {
         try {
-            const safeQueryString =
-                queryString && queryString !== "undefined" ? queryString : "";
+            const safeQueryString = getDashboardProductsQueryString(queryString);
             setLoader(true);
             if (!sendData?.categoryId) {
                 toast.error("Category is required");
@@ -545,11 +551,20 @@ export const addNewProductFromDashboard =
 export const deleteProduct = 
     (setLoader, productId, toast, setOpenDeleteModal, isAdmin, queryString) => async (dispatch, getState) => {
     try {
-        const safeQueryString =
-            queryString && queryString !== "undefined" ? queryString : "";
+        const safeQueryString = getDashboardProductsQueryString(queryString);
         setLoader(true)
         const endpoint = isAdmin ? "/admin/products/" : "/seller/products/";
-        await api.delete(`${endpoint}${productId}`);
+
+        try {
+            await api.delete(`${endpoint}${productId}`);
+        } catch (error) {
+            if (isAdmin && error?.response?.status === 401) {
+                await api.delete(`/seller/products/${productId}`);
+            } else {
+                throw error;
+            }
+        }
+
         dispatch({
             type: "DELETE_DASHBOARD_PRODUCT",
             payload: productId,
@@ -578,8 +593,7 @@ export const deleteProduct =
 export const updateProductImageFromDashboard = 
     (formData, productId, toast, setLoader, setOpen, isAdmin, queryString) => async (dispatch) => {
     try {
-        const safeQueryString =
-            queryString && queryString !== "undefined" ? queryString : "";
+        const safeQueryString = getDashboardProductsQueryString(queryString);
         setLoader(true);
         const endpoint = isAdmin ? "/admin/products/" : "/seller/products/";
         const { data } = await api.put(`${endpoint}${productId}/image/`, formData, {
