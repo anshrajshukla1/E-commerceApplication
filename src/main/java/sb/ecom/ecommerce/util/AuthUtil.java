@@ -17,7 +17,6 @@ public class AuthUtil {
     private User resolveLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String subject = authentication.getName();
-        System.out.println("LOGGED_IN_IDENTIFIER = " + subject);
 
         return userRepository.findByEmail(subject)
                 .or(() -> userRepository.findByUserName(subject))

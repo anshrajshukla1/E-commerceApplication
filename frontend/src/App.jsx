@@ -20,18 +20,20 @@ import Dashboard from "./components/admin/dashboard/Dashboard";
 import Sellers from "./components/admin/sellers/Sellers";
 import Category from "./components/admin/categories/Category";
 import AdminProducts from "./components/admin/products/AdminProducts";
+import Orders from "./components/admin/orders/Orders";
 
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (user?.id) {
+    const token = localStorage.getItem("token")?.trim();
+
+    if (user?.id && token) {
       dispatch(getUserCart());
       dispatch(getUserAddresses());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, user?.id]);
 
   return (
     <React.Fragment>
@@ -59,6 +61,7 @@ function App() {
                 <Route path='' element={<Dashboard/>}/>
                  <Route path='products' element={<AdminProducts/>}/>
                   <Route path='sellers' element={<Sellers/>}/>
+                  <Route path="orders" element={<Orders/>}/>
                    <Route path='categories' element={<Category/>}/>
             </Route>
           </Route>

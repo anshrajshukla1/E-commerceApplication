@@ -35,26 +35,24 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
+        boolean isProtectedAuthPath = path.startsWith("/api/auth/username") || path.startsWith("/api/auth/user");
 
-        if (path.startsWith("/api/public") || path.startsWith("/api/auth")) {
+        if (path.startsWith("/api/public") || (path.startsWith("/api/auth") && !isProtectedAuthPath) || path.startsWith("/images/")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
-
         try {
             String jwt = parseJwt(request);
-            System.out.println("JWT FROM HEADER = " + jwt); // 🔥 DEBUG
 
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            if (jwt == null || jwt.isBlank()) {
+                jwt = jwtUtils.getJwtFromCookies(request);
+            }
 
+            if (jwt != null && !jwt.isBlank() && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                System.out.println("JWT SUBJECT = " + username);
 
-                // 🔥 IMPORTANT: avoid re-authentication
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
-
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                     UsernamePasswordAuthenticationToken authentication =
@@ -69,12 +67,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     );
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    System.out.println("AUTH SET SUCCESS ✅"); // 🔥 DEBUG
                 }
-
-            } else {
-                System.out.println("JWT INVALID OR NULL ❌"); // 🔥 DEBUG
             }
 
         } catch (Exception e) {

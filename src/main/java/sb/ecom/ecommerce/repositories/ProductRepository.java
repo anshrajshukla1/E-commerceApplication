@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import sb.ecom.ecommerce.model.Category;
 import sb.ecom.ecommerce.model.Product;
+import sb.ecom.ecommerce.model.User;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpecificationExecutor<Product> {
@@ -14,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpec
     Page<Product> findByCategoryOrderByPriceAsc(Category category, Pageable pageDetails);
 
     Page<Product> findByProductNameLikeIgnoreCase(String keyword, Pageable pageDetails);
+
+    Page<Product> findByUser(User user, Pageable pageDetails);
 }

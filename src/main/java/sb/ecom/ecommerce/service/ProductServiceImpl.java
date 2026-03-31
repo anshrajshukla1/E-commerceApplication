@@ -15,12 +15,14 @@ import sb.ecom.ecommerce.exceptions.ResourceNotFoundException;
 import sb.ecom.ecommerce.model.Cart;
 import sb.ecom.ecommerce.model.Category;
 import sb.ecom.ecommerce.model.Product;
+import sb.ecom.ecommerce.model.User;
 import sb.ecom.ecommerce.payload.CartDTO;
 import sb.ecom.ecommerce.payload.ProductDTO;
 import sb.ecom.ecommerce.payload.ProductResponse;
 import sb.ecom.ecommerce.repositories.CartRepository;
 import sb.ecom.ecommerce.repositories.CategoryRepository;
 import sb.ecom.ecommerce.repositories.ProductRepository;
+import sb.ecom.ecommerce.util.AuthUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,6 +53,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CartService cartService;
+    @Autowired
+    private AuthUtil authUtil;
 
     @Override
     public ProductDTO addProduct(Long categoryId, ProductDTO productDTO) {
@@ -69,8 +73,10 @@ public class ProductServiceImpl implements ProductService {
 
         if (isProductNotPresent) {
             Product product = modelMapper.map(productDTO, Product.class);
+            product.setProductDescription(productDTO.getDescription());
             product.setCategory(category);
             product.setImage("default.png");
+            product.setUser(authUtil.loggedInUser());
 
             double specialPrice = product.getPrice() - (product.getDiscount() * 0.01) * product.getPrice();
             product.setSpecialPrice(specialPrice);
@@ -126,6 +132,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDTO> productDTOS = products.stream().map(product -> {
             ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+            productDTO.setDescription(product.getProductDescription());
             productDTO.setImage(constructImageUrl(product.getImage()));
             return productDTO;
         }).toList();
@@ -167,7 +174,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    productDTO.setDescription(product.getProductDescription());
+                    return productDTO;
+                })
                 .toList();
 
         ProductResponse productResponse = new ProductResponse();
@@ -199,7 +210,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<ProductDTO> productDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    productDTO.setDescription(product.getProductDescription());
+                    return productDTO;
+                })
                 .toList();
 
         ProductResponse productResponse = new ProductResponse();
@@ -243,7 +258,9 @@ public class ProductServiceImpl implements ProductService {
 
         cartDTOS.forEach(cart -> cartService.updateProductInCarts(cart.getCartID(), productId));
 
-        return modelMapper.map(savedProduct, ProductDTO.class);
+        ProductDTO response = modelMapper.map(savedProduct, ProductDTO.class);
+        response.setDescription(savedProduct.getProductDescription());
+        return response;
     }
 
     @Override
@@ -257,7 +274,9 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(product);
 
-        return modelMapper.map(product, ProductDTO.class);
+        ProductDTO response = modelMapper.map(product, ProductDTO.class);
+        response.setDescription(product.getProductDescription());
+        return response;
     }
 
     @Override
@@ -272,6 +291,74 @@ public class ProductServiceImpl implements ProductService {
 
         Product updatedProduct = productRepository.save(productfromdb);
 
-        return modelMapper.map(updatedProduct, ProductDTO.class);
+        ProductDTO response = modelMapper.map(updatedProduct, ProductDTO.class);
+        response.setDescription(updatedProduct.getProductDescription());
+        return response;
     }
+
+    @Override
+    public ProductResponse getAllProductsForAdmin(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Product> pageProducts = productRepository.findAll(pageDetails);
+
+        List<Product> products = pageProducts.getContent();
+
+        List<ProductDTO> productDTOS = products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    productDTO.setDescription(product.getProductDescription());
+                    productDTO.setImage(constructImageUrl(product.getImage()));
+                    return productDTO;
+                })
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageProducts.getNumber());
+        productResponse.setPageSize(pageProducts.getSize());
+        productResponse.setTotalElements(pageProducts.getTotalElements());
+        productResponse.setTotalPages(pageProducts.getTotalPages());
+        productResponse.setLastPage(pageProducts.isLast());
+        return productResponse;
+    }
+
+    @Override
+    public ProductResponse getAllProductsForSeller(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+        User user = authUtil.loggedInUser();
+        Page<Product> pageProducts = productRepository.findByUser(user, pageDetails);
+
+        List<Product> products = pageProducts.getContent();
+
+        List<ProductDTO> productDTOS = products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    productDTO.setDescription(product.getProductDescription());
+                    productDTO.setImage(constructImageUrl(product.getImage()));
+                    return productDTO;
+                })
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageProducts.getNumber());
+        productResponse.setPageSize(pageProducts.getSize());
+        productResponse.setTotalElements(pageProducts.getTotalElements());
+        productResponse.setTotalPages(pageProducts.getTotalPages());
+        productResponse.setLastPage(pageProducts.isLast());
+        return productResponse;
+    }
+
+
+
+
 }

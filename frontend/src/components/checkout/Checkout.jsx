@@ -31,6 +31,13 @@ const Checkout = () => {
     ];
 
     useEffect(() => {
+        const token = localStorage.getItem("token")?.trim();
+
+        if (!token) {
+            setCheckoutLoading(false);
+            return;
+        }
+
         initialLocalCartRef.current = cart;
 
         let isMounted = true;
@@ -53,8 +60,7 @@ const Checkout = () => {
         return () => {
             isMounted = false;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dispatch]);
 
     const isStepInvalid = () => {
         if (activeStep === 0) return !selectedUserCheckoutAddress;

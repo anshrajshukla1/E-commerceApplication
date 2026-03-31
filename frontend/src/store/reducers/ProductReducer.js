@@ -33,6 +33,27 @@ export const productReducer = (state = initialState, action) => {
            lastPage: action.lastPage,
         }
       }
+    case "ADD_DASHBOARD_PRODUCT":
+      return {
+        ...state,
+        products: state.products ? [action.payload, ...state.products] : [action.payload],
+      }
+    case "UPDATE_DASHBOARD_PRODUCT":
+      return {
+        ...state,
+        products: (state.products || []).map((product) =>
+          product?.productId === action.payload.productId
+            ? { ...product, ...action.payload }
+            : product
+        ),
+      }
+    case "DELETE_DASHBOARD_PRODUCT":
+      return {
+        ...state,
+        products: (state.products || []).filter(
+          (product) => product?.productId !== action.payload
+        ),
+      }
 
 
     default:

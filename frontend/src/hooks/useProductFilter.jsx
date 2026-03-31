@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { fetchProducts } from "../store/actions/index";
+import { dashboardProductsAction, fetchProducts } from "../store/actions/index";
 
 const useProductFilter = () => {
   const [searchParams] = useSearchParams();
@@ -9,11 +9,9 @@ const useProductFilter = () => {
 
   useEffect(() => {
     const params = new URLSearchParams();
-
     const currentPage = searchParams.get("page")
       ? Number(searchParams.get("page"))
       : 1;
-
     const sortOrder = searchParams.get("sortOrder") || "asc";
     const category = searchParams.get("category") || null;
     const keyword = searchParams.get("keyword") || null;
@@ -25,11 +23,32 @@ const useProductFilter = () => {
     if (category) params.set("category", category);
     if (keyword) params.set("keyword", keyword);
 
-    const queryString = params.toString();
-    console.log("QUERY STRING:", queryString);
+    dispatch(fetchProducts(params.toString()));
+  }, [dispatch, searchParams]);
+};
 
-    dispatch(fetchProducts(queryString));
-  }, [searchParams, dispatch]);
+export const useDashboardProductFilter = () => {
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.roles?.includes("ROLE_ADMIN");
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")?.trim();
+
+    if (!user || !token) {
+      return;
+    }
+
+    const params = new URLSearchParams();
+    const currentPage = searchParams.get("page")
+      ? Number(searchParams.get("page"))
+      : 1;
+
+    params.set("pageNumber", currentPage - 1);
+
+    dispatch(dashboardProductsAction(params.toString(), isAdmin));
+  }, [dispatch, isAdmin, searchParams, user]);
 };
 
 export default useProductFilter;

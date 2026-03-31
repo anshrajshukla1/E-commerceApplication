@@ -12,6 +12,10 @@ const Divider = () => <hr className="my-3 border-t border-gray-200" />
 function ProductViewModal({ open, setOpen, product, isAvailable }) {
   if (!open || !product || typeof product !== 'object') return null
 
+  const available = typeof isAvailable === "boolean"
+    ? isAvailable
+    : Number(product?.quantity) > 0
+
   const {
     productName,
     image,
@@ -43,7 +47,7 @@ function ProductViewModal({ open, setOpen, product, isAvailable }) {
                 <span className="text-xl font-bold">${Number(price).toFixed(2)}</span>
               )}
 
-              {isAvailable ? (
+              {available ? (
                 <Status text="In Stock" icon={MdDone} bg="bg-teal-200" color="text-teal-900" />
               ) : (
                 <Status text="Out-Of-Stock" icon={MdClose} bg="bg-rose-200" color="text-rose-700" />

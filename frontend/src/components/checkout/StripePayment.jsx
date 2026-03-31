@@ -1,52 +1,51 @@
-import { Alert, AlertTitle, Skeleton } from '@mui/material'
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import PaymentForm from './PaymentForm';
-import { createStripePaymentSecret } from '../../store/actions';
+import { Alert, AlertTitle, Skeleton } from "@mui/material";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import PaymentForm from "./PaymentForm";
+import { createStripePaymentSecret } from "../../store/actions";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const StripePayment = () => {
   const dispatch = useDispatch();
-
-  const { clientSecret, user, selectedUserCheckoutAddress } = useSelector((state) => state.auth);
+  const { clientSecret, user, selectedUserCheckoutAddress } = useSelector(
+    (state) => state.auth
+  );
   const { totalPrice } = useSelector((state) => state.carts);
   const { isLoading, errorMessage } = useSelector((state) => state.errors);
-  
 
-  // 🔥 FIXED useEffect
   useEffect(() => {
-    console.log("🔥 Stripe API will be called");
+    const token = localStorage.getItem("token")?.trim();
 
-    // clear old secret (important)
+    if (!token || !user?.email || !selectedUserCheckoutAddress) {
+      return;
+    }
+
     dispatch({ type: "REMOVE_CLIENT_SECRET_ADDRESS" });
 
     const sendData = {
       amount: Number(totalPrice) * 100,
-      currency: "usd", // keep usd if you want
-      email: user?.email,
+      currency: "usd",
+      email: user.email,
       name: `${user?.username}`,
       address: selectedUserCheckoutAddress,
-      description: `Order for ${user?.email}`,
+      description: `Order for ${user.email}`,
       metadata: {
-        test: "1"
-      }
+        test: "1",
+      },
     };
 
     dispatch(createStripePaymentSecret(sendData));
-
-  }, []); // ✅ ONLY RUN ONCE
-
-  console.log("CLIENT SECRET:", clientSecret);
+  }, [dispatch, selectedUserCheckoutAddress, totalPrice, user]);
 
   if (isLoading) {
     return (
-      <div className='max-w-lg mx-auto'>
+      <div className="max-w-lg mx-auto">
         <Skeleton />
       </div>
-    )
+    );
   }
 
   return (
@@ -65,11 +64,14 @@ const StripePayment = () => {
       ) : (
         <div className="bg-orange-500 text-white p-4 rounded-md max-w-lg mx-auto">
           <strong>Warning: Stripe Unavailable</strong>
-          <p>Stripe payment is currently unavailable. Please try another payment method later.</p>
+          <p>
+            Stripe payment is currently unavailable. Please try another payment
+            method later.
+          </p>
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
 export default StripePayment;

@@ -50,7 +50,10 @@ public class CartController {
         Cart cart = cartRepository.findCartByEmail(emailId);
 
         if (cart == null) {
-            return ResponseEntity.notFound().build();
+            CartDTO emptyCart = new CartDTO();
+            emptyCart.setProducts(List.of());
+            emptyCart.setTotalPrice(0.0);
+            return new ResponseEntity<>(emptyCart, HttpStatus.OK);
         }
 
         Long cartId = cart.getCartID();
